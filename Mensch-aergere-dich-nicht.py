@@ -4,48 +4,49 @@ import random
 class canvas(Frame):
     def __init__(self, master=None):
         super().__init__(master)
-        self.felder = [0]*56
+        self.felder = []
         self.master = master
         self.new_window()
         master.title("Mensch ärgere dich nicht!")
         self.pack()
         self.create_board()
-        #self.create_dice(dice_window)
     
     def new_window(self):
             self.newWindow = Toplevel(self.master)
-            self.app = Demo2(self.newWindow)
+            self.app = Dice(self.newWindow)
+    
+    def clicked(self, event):
+        if(event.widget["background"] == "white"):
+            print("works")
 
     def create_board(self):
         self.main_board = Canvas(self,width=800, height=700, bg = "#F5F6CE")
         self.main_board.pack()
-        #oval = self.main_board.create_polygon(20,20,780,20,780,680,20,680, outline="red", fill="", width=3)
-        a=0
-        for i in range(0,3,1):
-            self.felder[a] = self.main_board.create_oval(350+(50*i),75,385+(50*i),110,fill="white")
-            self.felder[a+3] = self.main_board.create_oval(350+(50*i),610,385+(50*i),575,fill="white")
-            a+=1
-        a=6
-        for i in range(0,4,1):
-            self.felder[a] = self.main_board.create_oval(350,160+(i*50),385,125+(i*50),fill="white")
-            self.felder[a+4] = self.main_board.create_oval(350,410+(i*50),385,375+(i*50),fill="white")
-            self.felder[a+8] = self.main_board.create_oval(450,160+(i*50),485,125+(i*50),fill="white")
-            self.felder[a+12] = self.main_board.create_oval(450,410+(i*50),485,375+(i*50),fill="white")
-            self.felder[a+16] = self.main_board.create_oval(300-(i*50),310,335-(i*50),275,fill="white")
-            self.felder[a+20] = self.main_board.create_oval(500+(i*50),310,535+(i*50),275,fill="white")
-            self.felder[a+24] = self.main_board.create_oval(300-(i*50),410,335-(i*50),375,fill="white")#300,360
-            self.felder[a+28] = self.main_board.create_oval(500+(i*50),410,535+(i*50),375,fill="white")
-            
-            self.felder[a+32] = self.main_board.create_oval(400,410+(i*50),435,375+(i*50),fill="red")
-            self.felder[a+36] = self.main_board.create_oval(400,160+(i*50),435,125+(i*50),fill="blue")
-            self.felder[a+40] = self.main_board.create_oval(200+(i*50),360,235+(i*50),325,fill="green")
-            self.felder[a+44] = self.main_board.create_oval(450+(i*50),360,485+(i*50),325,fill="yellow")
-            a+=1
-            
-        self.felder[54] = self.main_board.create_oval(150,360,185,325,fill="white")
-        self.felder[55] = self.main_board.create_oval(650,360,685,325,fill="white")
 
-class Demo2:
+        for i in range(0,3,1):
+            self.felder.append(self.main_board.create_oval(350+(50*i),75,385+(50*i),110,fill="white"))
+            self.felder.append(self.main_board.create_oval(350+(50*i),610,385+(50*i),575,fill="white"))
+
+        for i in range(0,4,1):
+            button= self.main_board.create_oval(350,160+(i*50),385,125+(i*50),fill="white", tags="playbutton")
+            button= self.main_board.create_oval(350,410+(i*50),385,375+(i*50),fill="white", tags="playbutton")
+            button= self.main_board.create_oval(450,160+(i*50),485,125+(i*50),fill="white", tags="playbutton")
+            button= self.main_board.create_oval(450,410+(i*50),485,375+(i*50),fill="white", tags="playbutton")
+            button= self.main_board.create_oval(300-(i*50),310,335-(i*50),275,fill="white", tags="playbutton")
+            button= self.main_board.create_oval(500+(i*50),310,535+(i*50),275,fill="white", tags="playbutton")
+            button= self.main_board.create_oval(300-(i*50),410,335-(i*50),375,fill="white", tags="playbutton")
+            button= self.main_board.create_oval(500+(i*50),410,535+(i*50),375,fill="white", tags="playbutton")
+            
+            button= self.main_board.create_oval(400,410+(i*50),435,375+(i*50),fill="red", tags="playbutton")
+            button= self.main_board.create_oval(400,160+(i*50),435,125+(i*50),fill="blue", tags="playbutton")
+            button= self.main_board.create_oval(200+(i*50),360,235+(i*50),325,fill="green", tags="playbutton")
+            button= self.main_board.create_oval(450+(i*50),360,485+(i*50),325,fill="yellow", tags="playbutton")
+            
+        button=self.main_board.create_oval(150,360,185,325,fill="white", tags="playbutton")
+        button= self.main_board.create_oval(650,360,685,325,fill="white", tags="playbutton")
+        self.main_board.tag_bind("playbutton", "<Button-1>", self.clicked)
+
+class Dice:
     def __init__(self, master):
         self.master = master
         master.title("Dice")
@@ -87,17 +88,6 @@ class Demo2:
             oval = self.dice.create_oval(50,25,35,40, fill="black")
             oval = self.dice.create_oval(50,70,35,85, fill="black")
             oval = self.dice.create_oval(105,70,120,85, fill="black")
-        
-    #def create_dice(self,dice_window):
-     #   dice_window.title = "Würfel"
-      #  self.pack()
-            #self.dice = Button(self)
-            #self.dice["text"]="Würfeln"
-            #self.dice["font"]= tkFont.Font(size=16,family="Calibri")
-            #self.dice.bind("<ButtonPress-1>", self.create_pic)
-            #self.dice.pack()
-            
-       #     break
         
 root_window = Tk()
 app = canvas(root_window)
