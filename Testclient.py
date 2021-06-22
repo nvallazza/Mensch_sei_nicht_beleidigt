@@ -11,7 +11,6 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 
 
-
 def send():
     Tuple= ("Green","2x4y")
     
@@ -30,7 +29,7 @@ def send():
             s.close()
             send_thread.join()
             
-            #Force program to end (Produces Errors)
+            #Force program to end
             try:
                 exit (0)
             except ConnectionAbortedError:
@@ -43,7 +42,6 @@ def receive():
     received = s.recv(1024)#Empfangen
     #print(repr(data))
     received_readable = pickle.loads(received)
-    received_readable = pickle.loads(received_readable)
     print("\nreceived: ", received_readable)
 
 
@@ -57,10 +55,3 @@ while 1:
     #receive_thread.start()
     receive()
     
-
-
-        
-
-
-
-
