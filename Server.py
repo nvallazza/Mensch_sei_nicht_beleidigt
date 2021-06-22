@@ -1,6 +1,4 @@
 # Server
-#2do check Tuple
-#Let send sth work
 import socket
 import threading
 import pickle
