@@ -1,10 +1,14 @@
 from tkinter import *
 import random
+import time
+
+global num, newWindow
+num = 0
 
 class canvas(Frame):
     def __init__(self, master=None):
         super().__init__(master)
-        self.felder = []
+        self.coords = []
         self.master = master
         self.new_window()
         master.title("Mensch ärgere dich nicht!")
@@ -12,13 +16,19 @@ class canvas(Frame):
         self.create_board()
     
     def new_window(self):
-            self.newWindow = Toplevel(self.master)
-            self.app = Dice(self.newWindow)
+        global num, newWindow
+        if num == 0:
+            newWindow = Toplevel(self.master)
+        newWindow.destroy()
+        newWindow = Toplevel(self.master)
+        Dice(newWindow)
+        return num
     
     def clicked(self, event):
         caller = event.widget.find_withtag("current")[0]
         self.main_board.itemconfigure(caller,fill="red")
         print("you clicked:"+str(caller))
+        self.gameplay()
 
     def create_board(self):
         x0 = 0
@@ -26,7 +36,6 @@ class canvas(Frame):
         y0 = 0
         y1 = 0
         color = ""
-        self.coords = []
         self.main_board = Canvas(self,width=800, height=700, bg = "#F5F6CE")
         self.main_board.pack()
         
@@ -70,49 +79,58 @@ class canvas(Frame):
             color = self.coords[i-1][4]
             button= self.main_board.create_oval(x0,y0,x1,y1,fill=color,tags=myTag)
             self.main_board.tag_bind(myTag, "<Button-1>", self.clicked)
-
+            
+    def gameplay(self):
+        self.num = self.new_window()
+        print(self.num)
+            
 class Dice:
     def __init__(self, master):
         self.master = master
         master.title("Dice")
         master.geometry("200x200")
+        self.play()
+        
+    def play(self):
         self.frame = Frame(self.master)
         self.frame.pack()
         self.dice = Canvas(self.frame ,width=150, height=150, bg = "#F5F6CE")
         self.dice.pack()
-        self.diceButton = Button(self.frame, text = 'Dice', width = 5, command = self.roll_dice)
-        self.diceButton.pack(side = "bottom")
+        def roll_dice():
+            global num
+            self.dice.delete("all")
+            self.num = random.randint(1,6)
+            if self.num==1:
+                oval = self.dice.create_oval(70,70,85,85, fill="black")
+            elif self.num==2:
+                oval = self.dice.create_oval(105,35,120,50, fill="black")
+                oval = self.dice.create_oval(50,105,35,120, fill="black")
+            elif self.num==3:
+                oval = self.dice.create_oval(105,35,120,50, fill="black")
+                oval = self.dice.create_oval(50,105,35,120, fill="black")
+                oval = self.dice.create_oval(70,70,85,85, fill="black")
+            elif self.num==4:
+                oval = self.dice.create_oval(105,35,120,50, fill="black")
+                oval = self.dice.create_oval(50,105,35,120, fill="black")
+                oval = self.dice.create_oval(105,105,120,120, fill="black")
+                oval = self.dice.create_oval(50,35,35,50, fill="black")
+            elif self.num==5:
+                oval = self.dice.create_oval(105,35,120,50, fill="black")
+                oval = self.dice.create_oval(50,105,35,120, fill="black")
+                oval = self.dice.create_oval(105,105,120,120, fill="black")
+                oval = self.dice.create_oval(50,35,35,50, fill="black")
+                oval = self.dice.create_oval(70,70,85,85, fill="black")
+            else:
+                oval = self.dice.create_oval(105,25,120,40, fill="black")
+                oval = self.dice.create_oval(50,115,35,130, fill="black")
+                oval = self.dice.create_oval(105,115,120,130, fill="black")
+                oval = self.dice.create_oval(50,25,35,40, fill="black")
+                oval = self.dice.create_oval(50,70,35,85, fill="black")
+                oval = self.dice.create_oval(105,70,120,85, fill="black")
+            num = self.num
 
-    def roll_dice(self):
-        self.dice.delete("all")
-        self.num = random.randint(1,6)
-        if self.num==1:
-            oval = self.dice.create_oval(70,70,85,85, fill="black")
-        elif self.num==2:
-            oval = self.dice.create_oval(105,35,120,50, fill="black")
-            oval = self.dice.create_oval(50,105,35,120, fill="black")
-        elif self.num==3:
-            oval = self.dice.create_oval(105,35,120,50, fill="black")
-            oval = self.dice.create_oval(50,105,35,120, fill="black")
-            oval = self.dice.create_oval(70,70,85,85, fill="black")
-        elif self.num==4:
-            oval = self.dice.create_oval(105,35,120,50, fill="black")
-            oval = self.dice.create_oval(50,105,35,120, fill="black")
-            oval = self.dice.create_oval(105,105,120,120, fill="black")
-            oval = self.dice.create_oval(50,35,35,50, fill="black")
-        elif self.num==5:
-            oval = self.dice.create_oval(105,35,120,50, fill="black")
-            oval = self.dice.create_oval(50,105,35,120, fill="black")
-            oval = self.dice.create_oval(105,105,120,120, fill="black")
-            oval = self.dice.create_oval(50,35,35,50, fill="black")
-            oval = self.dice.create_oval(70,70,85,85, fill="black")
-        else:
-            oval = self.dice.create_oval(105,25,120,40, fill="black")
-            oval = self.dice.create_oval(50,115,35,130, fill="black")
-            oval = self.dice.create_oval(105,115,120,130, fill="black")
-            oval = self.dice.create_oval(50,25,35,40, fill="black")
-            oval = self.dice.create_oval(50,70,35,85, fill="black")
-            oval = self.dice.create_oval(105,70,120,85, fill="black")
+        self.diceButton = Button(self.frame, text = 'Dice', width = 5, command = roll_dice)
+        self.diceButton.pack(side = "bottom")
         
 root_window = Tk()
 app = canvas(root_window)
