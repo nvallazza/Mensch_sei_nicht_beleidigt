@@ -16,35 +16,60 @@ class canvas(Frame):
             self.app = Dice(self.newWindow)
     
     def clicked(self, event):
-        if(event.widget["background"] == "white"):
-            print("works")
+        caller = event.widget.find_withtag("current")[0]
+        self.main_board.itemconfigure(caller,fill="red")
+        print("you clicked:"+str(caller))
 
     def create_board(self):
+        x0 = 0
+        x1 = 0
+        y0 = 0
+        y1 = 0
+        color = ""
+        self.coords = []
         self.main_board = Canvas(self,width=800, height=700, bg = "#F5F6CE")
         self.main_board.pack()
-
+        
         for i in range(0,3,1):
-            self.felder.append(self.main_board.create_oval(350+(50*i),75,385+(50*i),110,fill="white"))
-            self.felder.append(self.main_board.create_oval(350+(50*i),610,385+(50*i),575,fill="white"))
-
+            self.coords.append((350+(50*i),75,385+(50*i),110,"white"))
+        for i in range(0,3,1):
+            self.coords.append((350+(50*i),610,385+(50*i),575,"white"))
         for i in range(0,4,1):
-            button= self.main_board.create_oval(350,160+(i*50),385,125+(i*50),fill="white", tags="playbutton")
-            button= self.main_board.create_oval(350,410+(i*50),385,375+(i*50),fill="white", tags="playbutton")
-            button= self.main_board.create_oval(450,160+(i*50),485,125+(i*50),fill="white", tags="playbutton")
-            button= self.main_board.create_oval(450,410+(i*50),485,375+(i*50),fill="white", tags="playbutton")
-            button= self.main_board.create_oval(300-(i*50),310,335-(i*50),275,fill="white", tags="playbutton")
-            button= self.main_board.create_oval(500+(i*50),310,535+(i*50),275,fill="white", tags="playbutton")
-            button= self.main_board.create_oval(300-(i*50),410,335-(i*50),375,fill="white", tags="playbutton")
-            button= self.main_board.create_oval(500+(i*50),410,535+(i*50),375,fill="white", tags="playbutton")
-            
-            button= self.main_board.create_oval(400,410+(i*50),435,375+(i*50),fill="red", tags="playbutton")
-            button= self.main_board.create_oval(400,160+(i*50),435,125+(i*50),fill="blue", tags="playbutton")
-            button= self.main_board.create_oval(200+(i*50),360,235+(i*50),325,fill="green", tags="playbutton")
-            button= self.main_board.create_oval(450+(i*50),360,485+(i*50),325,fill="yellow", tags="playbutton")
-            
-        button=self.main_board.create_oval(150,360,185,325,fill="white", tags="playbutton")
-        button= self.main_board.create_oval(650,360,685,325,fill="white", tags="playbutton")
-        self.main_board.tag_bind("playbutton", "<Button-1>", self.clicked)
+            self.coords.append((350,160+(i*50),385,125+(i*50),"white"))
+        for i in range(0,4,1):
+            self.coords.append((350,410+(i*50),385,375+(i*50),"white"))
+        for i in range(0,4,1):
+            self.coords.append((450,160+((i)*50),485,125+((i)*50),"white"))
+        for i in range(0,4,1):
+            self.coords.append((450,410+((i)*50),485,375+((i)*50),"white"))
+        for i in range(0,4,1):
+            self.coords.append((300-((i)*50),310,335-((i)*50),275,"white"))
+        for i in range(0,4,1):
+            self.coords.append((500+((i)*50),310,535+((i)*50),275,"white"))
+        for i in range(0,4,1):
+            self.coords.append((300-((i)*50),410,335-((i)*50),375,"white"))
+        for i in range(0,4,1):
+            self.coords.append((500+((i)*50),410,535+((i)*50),375,"white"))
+        for i in range(0,4,1):
+            self.coords.append((400,410+((i)*50),435,375+((i)*50),"#F78181"))
+        for i in range(0,4,1):
+            self.coords.append((400,160+((i)*50),435,125+((i)*50),"#819FF7"))
+        for i in range(0,4,1):
+            self.coords.append((200+((i)*50),360,235+((i)*50),325,"#81F781"))
+        for i in range(0,4,1):
+            self.coords.append((450+((i)*50),360,485+((i)*50),325,"#F3F781"))
+        self.coords.append((150,360,185,325,"white"))
+        self.coords.append((650,360,685,325,"white"))
+        
+        for i in range (1,57,1):
+            myTag = "{}".format(i)
+            x0 = self.coords[i-1][0]
+            y0 = self.coords[i-1][1]
+            x1 = self.coords[i-1][2]
+            y1 = self.coords[i-1][3]
+            color = self.coords[i-1][4]
+            button= self.main_board.create_oval(x0,y0,x1,y1,fill=color,tags=myTag)
+            self.main_board.tag_bind(myTag, "<Button-1>", self.clicked)
 
 class Dice:
     def __init__(self, master):
