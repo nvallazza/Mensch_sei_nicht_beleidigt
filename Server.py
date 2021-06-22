@@ -1,4 +1,6 @@
 # Server
+#2do check Tuple
+#Let send sth work
 import socket
 import threading
 import pickle
@@ -7,13 +9,14 @@ client_conn = []
 
 def broadcast(data, conn):
     #send received to all clients
+    print (client_conn)
     for clients in client_conn:
         #Except sender
-        if conn == clients:
+        #if conn == clients:
             #Not send Message to sender
-            continue
+         #   continue
         
-        clients.sendall(pickle.dumps(data))
+        clients.sendall((pickle.dumps(data)))
 
 
 def echo(conn, addr):
@@ -32,24 +35,25 @@ def echo(conn, addr):
         
         if type(received) == str:
             print("String")
+            print(received)
             #add new player
+            broadcast(data, conn)
             if received == "red" or received == "green" or received == "jellow" or received == "green":
-                broadcast(data, conn)
+                #broadcast(data, conn)
                 client_conn.append(conn)
             
-        elif type(received) == list:
+        elif type(received) == tuple:
             #narmaler Spielverlauf
-            print("Liste")
+            print("Tuple")
+            print(received)
             broadcast(data, conn)
-            
-        conn.sendall(data)
-        break
+
     conn.close()
 
 
 
 HOST = '127.0.0.1' 
-PORT = 61110
+PORT = 61111
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
