@@ -16,7 +16,7 @@ def broadcast(data, conn):
             #Not send Message to sender
          #   continue
         
-        clients.sendall((pickle.dumps(data)))
+        clients.sendall(data)
 
 
 def echo(conn, addr):
@@ -35,17 +35,17 @@ def echo(conn, addr):
         
         if type(received) == str:
             print("String")
-            print(received)
-            #add new player
             broadcast(data, conn)
-            if received == "red" or received == "green" or received == "jellow" or received == "green":
+            
+            #M#aybe later needed##
+            #add new player
+            #if received == "red" or received == "green" or received == "jellow" or received == "green":
                 #broadcast(data, conn)
-                client_conn.append(conn)
+                #client_conn.append(conn)
             
         elif type(received) == tuple:
-            #narmaler Spielverlauf
+            #Spielfeld bzw. Positionen übertragen
             print("Tuple")
-            print(received)
             broadcast(data, conn)
 
     conn.close()
