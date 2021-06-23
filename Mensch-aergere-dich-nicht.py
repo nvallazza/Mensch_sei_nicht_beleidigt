@@ -1,8 +1,9 @@
 from tkinter import *
+from tkinter import messagebox
 import random
 import time
 
-global num, newWindow
+global num
 num = 0
 
 class canvas(Frame):
@@ -10,27 +11,42 @@ class canvas(Frame):
         super().__init__(master)
         self.coords = []
         self.master = master
-        self.new_window()
+        self.newWindow = Toplevel(self.master)
+        self.newWindow.after(1, lambda: self.newWindow.focus_force())
+        self.first_throw = Dice(self.newWindow)
+        #self.master.wait_window(self.newWindow)
         master.title("Mensch ärgere dich nicht!")
         self.pack()
         self.create_board()
     
-    def new_window(self):
-        global num, newWindow
-        if num == 0:
-            newWindow = Toplevel(self.master)
-        newWindow.destroy()
-        newWindow = Toplevel(self.master)
-        Dice(newWindow)
-        return num
+    def new_window(self, event):
+        #if num == 0:
+        #    self.newWindow = Toplevel(self.master)
+        self.caller = event.widget.find_withtag("current")[0]
+        if self.first_throw==1:
+            print("huhu")
+        y=list(self.coords[self.caller-1])
+        if y[4]=="white":
+            messagebox.showerror("Achtung!", "Keine Spielfigur auf diesem Feld!")
+            return
+        #self.newWindow.destroy()
+        self.newWindow = Toplevel(self.master)
+        #self.master.wait_window(self.newWindow)
+        Dice(self.newWindow)
+        self.clicked()
+        self.newWindow.destroy()
     
-    def clicked(self, event):
-        caller = event.widget.find_withtag("current")[0]
-        self.main_board.itemconfigure(caller,fill="red")
-        print("you clicked:"+str(caller))
-        self.gameplay()
+    def clicked(self):
+        global num
+        y=list(self.coords[self.caller-1])
+        y[4]="red"
+        self.coords[self.caller-1]=y
+        self.caller = self.caller+num
+        self.main_board.itemconfigure(self.caller,fill="red")
+        print("you clicked:"+str(self.caller))
 
     def create_board(self):
+        global num
         x0 = 0
         x1 = 0
         y0 = 0
@@ -41,24 +57,27 @@ class canvas(Frame):
         
         for i in range(0,3,1):
             self.coords.append((350+(50*i),75,385+(50*i),110,"white"))
-        for i in range(0,3,1):
-            self.coords.append((350+(50*i),610,385+(50*i),575,"white"))
-        for i in range(0,4,1):
-            self.coords.append((350,160+(i*50),385,125+(i*50),"white"))
-        for i in range(0,4,1):
-            self.coords.append((350,410+(i*50),385,375+(i*50),"white"))
         for i in range(0,4,1):
             self.coords.append((450,160+((i)*50),485,125+((i)*50),"white"))
         for i in range(0,4,1):
-            self.coords.append((450,410+((i)*50),485,375+((i)*50),"white"))
-        for i in range(0,4,1):
-            self.coords.append((300-((i)*50),310,335-((i)*50),275,"white"))
-        for i in range(0,4,1):
             self.coords.append((500+((i)*50),310,535+((i)*50),275,"white"))
+        self.coords.append((650,360,685,325,"white"))
+        for i in range(0,4,1):
+            self.coords.append((650-((i)*50),410,685-((i)*50),375,"white"))
+        for i in range(0,4,1):
+            self.coords.append((450,410+((i)*50),485,375+((i)*50),"white"))
+        for i in range(0,3,1):
+            self.coords.append((450-(50*i),610,485-(50*i),575,"white"))
+        for i in range(0,4,1):
+            self.coords.append((350,560-(i*50),385,525-(i*50),"white"))
         for i in range(0,4,1):
             self.coords.append((300-((i)*50),410,335-((i)*50),375,"white"))
+        self.coords.append((150,360,185,325,"white"))
         for i in range(0,4,1):
-            self.coords.append((500+((i)*50),410,535+((i)*50),375,"white"))
+            self.coords.append((150+((i)*50),310,185+((i)*50),275,"white"))
+        for i in range(0,4,1):
+            self.coords.append((350,310-(i*50),385,275-(i*50),"white"))
+            
         for i in range(0,4,1):
             self.coords.append((400,410+((i)*50),435,375+((i)*50),"#F78181"))
         for i in range(0,4,1):
@@ -67,8 +86,6 @@ class canvas(Frame):
             self.coords.append((200+((i)*50),360,235+((i)*50),325,"#81F781"))
         for i in range(0,4,1):
             self.coords.append((450+((i)*50),360,485+((i)*50),325,"#F3F781"))
-        self.coords.append((150,360,185,325,"white"))
-        self.coords.append((650,360,685,325,"white"))
         
         for i in range (1,57,1):
             myTag = "{}".format(i)
@@ -77,12 +94,11 @@ class canvas(Frame):
             x1 = self.coords[i-1][2]
             y1 = self.coords[i-1][3]
             color = self.coords[i-1][4]
-            button= self.main_board.create_oval(x0,y0,x1,y1,fill=color,tags=myTag)
-            self.main_board.tag_bind(myTag, "<Button-1>", self.clicked)
+            field= self.main_board.create_oval(x0,y0,x1,y1,fill=color,tags=myTag)
+            self.main_board.tag_bind(myTag, "<Button-1>", self.new_window)
             
     def gameplay(self):
-        self.num = self.new_window()
-        print(self.num)
+        self.new_window()
             
 class Dice:
     def __init__(self, master):
@@ -96,7 +112,7 @@ class Dice:
         self.frame.pack()
         self.dice = Canvas(self.frame ,width=150, height=150, bg = "#F5F6CE")
         self.dice.pack()
-        def roll_dice():
+        def roll_dice(event):
             global num
             self.dice.delete("all")
             self.num = random.randint(1,6)
@@ -128,9 +144,17 @@ class Dice:
                 oval = self.dice.create_oval(50,70,35,85, fill="black")
                 oval = self.dice.create_oval(105,70,120,85, fill="black")
             num = self.num
-
-        self.diceButton = Button(self.frame, text = 'Dice', width = 5, command = roll_dice)
+            print(num)
+            if num == 6:
+                #self.master.destroy()
+                return 1
+            else:
+                #self.master.destroy()
+                return 0
+        
+        self.diceButton = Button(self.frame, text = 'Dice', width = 5)
         self.diceButton.pack(side = "bottom")
+        self.diceButton.bind("<Button-1>", roll_dice)
         
 root_window = Tk()
 app = canvas(root_window)
