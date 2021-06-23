@@ -6,6 +6,9 @@ import time
 global num
 num = 0
 
+global dice_allowed
+dice_allowed = True
+
 class canvas(Frame):
     def __init__(self, master=None):
         super().__init__(master)
@@ -37,13 +40,14 @@ class canvas(Frame):
         self.newWindow.destroy()
     
     def clicked(self):
-        global num
+        global num,dice_allowed
         y=list(self.coords[self.caller-1])
         y[4]="red"
         self.coords[self.caller-1]=y
         self.caller = self.caller+num
         self.main_board.itemconfigure(self.caller,fill="red")
         print("you clicked:"+str(self.caller))
+        dice_allowed = True
 
     def create_board(self):
         global num
@@ -100,7 +104,7 @@ class canvas(Frame):
     def gameplay(self):
         self.new_window()
             
-class Dice:
+class Dice: 
     def __init__(self, master):
         self.master = master
         master.title("Dice")
@@ -112,45 +116,51 @@ class Dice:
         self.frame.pack()
         self.dice = Canvas(self.frame ,width=150, height=150, bg = "#F5F6CE")
         self.dice.pack()
+        self.dice_allowed = True
         def roll_dice(event):
             global num
-            self.dice.delete("all")
-            self.num = random.randint(1,6)
-            if self.num==1:
-                oval = self.dice.create_oval(70,70,85,85, fill="black")
-            elif self.num==2:
-                oval = self.dice.create_oval(105,35,120,50, fill="black")
-                oval = self.dice.create_oval(50,105,35,120, fill="black")
-            elif self.num==3:
-                oval = self.dice.create_oval(105,35,120,50, fill="black")
-                oval = self.dice.create_oval(50,105,35,120, fill="black")
-                oval = self.dice.create_oval(70,70,85,85, fill="black")
-            elif self.num==4:
-                oval = self.dice.create_oval(105,35,120,50, fill="black")
-                oval = self.dice.create_oval(50,105,35,120, fill="black")
-                oval = self.dice.create_oval(105,105,120,120, fill="black")
-                oval = self.dice.create_oval(50,35,35,50, fill="black")
-            elif self.num==5:
-                oval = self.dice.create_oval(105,35,120,50, fill="black")
-                oval = self.dice.create_oval(50,105,35,120, fill="black")
-                oval = self.dice.create_oval(105,105,120,120, fill="black")
-                oval = self.dice.create_oval(50,35,35,50, fill="black")
-                oval = self.dice.create_oval(70,70,85,85, fill="black")
-            else:
-                oval = self.dice.create_oval(105,25,120,40, fill="black")
-                oval = self.dice.create_oval(50,115,35,130, fill="black")
-                oval = self.dice.create_oval(105,115,120,130, fill="black")
-                oval = self.dice.create_oval(50,25,35,40, fill="black")
-                oval = self.dice.create_oval(50,70,35,85, fill="black")
-                oval = self.dice.create_oval(105,70,120,85, fill="black")
-            num = self.num
-            print(num)
-            if num == 6:
-                #self.master.destroy()
-                return 1
-            else:
-                #self.master.destroy()
-                return 0
+            global dice_allowed
+            while (dice_allowed == True):
+                self.dice.delete("all")
+                self.num = random.randint(1,6)
+                
+                if self.num==1:
+                    oval = self.dice.create_oval(70,70,85,85, fill="black")
+                elif self.num==2:
+                    oval = self.dice.create_oval(105,35,120,50, fill="black")
+                    oval = self.dice.create_oval(50,105,35,120, fill="black")
+                elif self.num==3:
+                    oval = self.dice.create_oval(105,35,120,50, fill="black")
+                    oval = self.dice.create_oval(50,105,35,120, fill="black")
+                    oval = self.dice.create_oval(70,70,85,85, fill="black")
+                elif self.num==4:
+                    oval = self.dice.create_oval(105,35,120,50, fill="black")
+                    oval = self.dice.create_oval(50,105,35,120, fill="black")
+                    oval = self.dice.create_oval(105,105,120,120, fill="black")
+                    oval = self.dice.create_oval(50,35,35,50, fill="black")
+                elif self.num==5:
+                    oval = self.dice.create_oval(105,35,120,50, fill="black")
+                    oval = self.dice.create_oval(50,105,35,120, fill="black")
+                    oval = self.dice.create_oval(105,105,120,120, fill="black")
+                    oval = self.dice.create_oval(50,35,35,50, fill="black")
+                    oval = self.dice.create_oval(70,70,85,85, fill="black")
+                else:
+                    oval = self.dice.create_oval(105,25,120,40, fill="black")
+                    oval = self.dice.create_oval(50,115,35,130, fill="black")
+                    oval = self.dice.create_oval(105,115,120,130, fill="black")
+                    oval = self.dice.create_oval(50,25,35,40, fill="black")
+                    oval = self.dice.create_oval(50,70,35,85, fill="black")
+                    oval = self.dice.create_oval(105,70,120,85, fill="black")
+                num = self.num
+                print(num)
+                if num == 6:
+                    #self.master.destroy()
+                    #return 1
+                    pass
+                else:
+                    #self.master.destroy()
+                    dice_allowed = False
+                    #return 0
         
         self.diceButton = Button(self.frame, text = 'Dice', width = 5)
         self.diceButton.pack(side = "bottom")
