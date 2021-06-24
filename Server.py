@@ -1,31 +1,31 @@
-# Server
-#2do check Tuple
-#Let send sth work
+# Server NV&OS Mensch sei nicht beleidigt!
 import socket
 import threading
 import pickle
 
 client_conn = []
+turn_player = 0
 
 def broadcast(data, conn):
     #send received to all clients
     print (client_conn)
     for clients in client_conn:
-        #Except sender
-        #if conn == clients:
-            #Not send Message to sender
-         #   continue
-        
+        #except sender
+        if conn == clients:
+            continue
         clients.sendall(data)
 
-
-def echo(conn, addr):
-    
+def echo(conn, addr):    
     print('Connected by', addr)
-    
     #add new connection to list
-    client_conn.append(conn)
-
+    if (len(client_conn) >= 4):
+        #not add connection to list if there are four players
+        pass
+    else:
+        client_conn.append(conn)
+        
+    print("einträge Conn liste: ", len(client_conn))
+    
     while True:
         data = conn.recv(1024)
         print('Received from client', repr(data))
@@ -36,17 +36,27 @@ def echo(conn, addr):
         if type(received) == str:
             print("String")
             broadcast(data, conn)
-            
-            #M#aybe later needed##
-            #add new player
-            #if received == "red" or received == "green" or received == "jellow" or received == "green":
+            #if received == 
                 #broadcast(data, conn)
-                #client_conn.append(conn)
             
-        elif type(received) == tuple:
+        else:
+            global turn_player
             #Spielfeld bzw. Positionen übertragen
-            print("Tuple")
             broadcast(data, conn)
+
+            
+            #decide which player ist the next
+            if (turn_player >= len(client_conn)):
+                turn_player = 0
+                print("reset")
+                
+            print("spieler: ", turn_player)
+            
+            #send message that it is next players turn
+            text = "Your Turn"
+            client_conn[turn_player].sendall(pickle.dumps(text))
+            
+            turn_player += 1
 
     conn.close()
 
