@@ -1,18 +1,24 @@
 from tkinter import *
 from tkinter import messagebox
 import random
+import socket
+import pickle
+import threading
 
 global num
 num = 0
-
 global dice_allowed
 dice_allowed = True
-
 global dice_force
 dice_force = True
-
 global count
 count = True
+global your_turn
+your_turn = True
+global recevie_disable
+recevie_disable = False
+global send_disable
+send_disable = False
 
 class canvas(Frame):
     def __init__(self, master=None):
@@ -28,7 +34,19 @@ class canvas(Frame):
         self.create_board()
     
     def new_window(self, event):
-        global dice_allowed, dice_force, count
+        global dice_allowed, dice_force, count, your_turn, send_disable, recevie_disable
+        if your_turn == False:
+            return
+        
+        if send_disable == False:
+            send_thread = threading.Thread(target=self.send)
+            send_thread.daemon = True
+            send_thread.start()
+            
+        if recevie_disable == False:
+            receive_thread = threading.Thread(target=self.receive)
+            receive_thread.start()
+        
         self.caller = event.widget.find_withtag("current")[0]
         if dice_force == True:
             Dice(self.newWindow)
@@ -45,23 +63,70 @@ class canvas(Frame):
             for i in range (j+1,7,1):
                 if ( self.caller == (40-j) and num == i):
                     y=list(self.coords[1+(i-j)])
-                    y[4]="red"
+                    y[4]="blue"
                     self.coords[1+(i-j)]=y
                     self.main_board.itemconfigure((i-j),fill="red")
                     print("you clicked:"+str(self.caller))
-                    print(self.coords[0])
                     dice_allowed = True
                     self.main_board.itemconfigure(self.caller, fill = "white")
                     return
-                    
+        y=list(self.coords[self.caller-1])
+        print(self.caller)
+        print(y[4])
+        print(num)
+        for j in range (0,5,1):
+            for i in range (1+j,7,1):
+                if ((self.caller == 22-j) and (y[4] == "red") and (num >= j and num <= 4+j)):
+                    y=list(self.coords[39+(num-j)])
+                    y[4]="#F78181"
+                    self.coords[39+(num-j)]=y
+                    self.main_board.itemconfigure(40+(num-j),fill="red")
+                    print("you clicked:"+str(self.caller))
+                    dice_allowed = True
+                    self.main_board.itemconfigure(self.caller, fill = "white")
+                    return
+        for j in range (0,5,1):
+            for i in range (1+j,7,1):
+                if ((self.caller == 32-j) and (y[4] == "green") and (num >= j and num <= 4+j)):
+                    y=list(self.coords[47+(num-j)])
+                    y[4]="#F3F781"
+                    self.coords[47+(num-j)]=y
+                    self.main_board.itemconfigure(48+(num-j),fill="green")
+                    print("you clicked:"+str(self.caller))
+                    dice_allowed = True
+                    self.main_board.itemconfigure(self.caller, fill = "white")
+                    return
+        for j in range (0,5,1):
+            for i in range (1+j,7,1):
+                if ((self.caller == 12-j) and (y[4] == "yellow") and (num >= j and num <= 4+j)):
+                    y=list(self.coords[51+(num-j)])
+                    y[4]="#F3F781"
+                    self.coords[51+(num-j)]=y
+                    self.main_board.itemconfigure(52+(num-j),fill="yellow")
+                    print("you clicked:"+str(self.caller))
+                    dice_allowed = True
+                    self.main_board.itemconfigure(self.caller, fill = "white")
+                    return
+        for j in range (0,5,1):
+            for i in range (1+j,7,1):
+                if ((self.caller == 2-j) and (y[4] == "blue") and (num >= j and num <= 4+j)):
+                    y=list(self.coords[43+(num-j)])
+                    y[4]="#F3F781"
+                    self.coords[43+(num-j)]=y
+                    self.main_board.itemconfigure(44+(num-j),fill="blue")
+                    print("you clicked:"+str(self.caller))
+                    dice_allowed = True
+                    self.main_board.itemconfigure(self.caller, fill = "white")
+                    return
+            
         y=list(self.coords[self.caller+num-1])
-        y[4]="red"
+        y[4]="blue"
         self.coords[self.caller+num-1]=y
         y=list(self.coords[self.caller-1])
         if y[0] == 450 and y[1] == 75:
             self.main_board.itemconfigure(self.caller, fill = "#819FF7")
         elif y[0] == 650 and y[1] == 410:
-            self.main_board.itemconfigure(self.caller, fill = "#F3F781")
+            self.main_board.itemconfigure(self.caller, fill = "#F2F5A9")
         elif y[0] == 350 and y[1] == 610:
             self.main_board.itemconfigure(self.caller, fill = "#F78181")
         elif y[0] == 150 and y[1] == 310:
@@ -69,7 +134,7 @@ class canvas(Frame):
         else:
             self.main_board.itemconfigure(self.caller, fill = "white")
             
-        self.main_board.itemconfigure(self.caller+num,fill="red")
+        self.main_board.itemconfigure(self.caller+num,fill="blue")
         print("you clicked:"+str(self.caller))
         dice_allowed = True
 
@@ -83,15 +148,17 @@ class canvas(Frame):
         self.main_board = Canvas(self,width=800, height=700, bg = "#F5F6CE")
         self.main_board.pack()
         
-        for i in range(0,2,1):
-            self.coords.append((350+(50*i),75,385+(50*i),110,"#FFFFFF"))
+        #for i in range(0,2,1):
+        #    self.coords.append((350+(50*i),75,385+(50*i),110,"#FFFFFF"))
+        self.coords.append((350,75,385,110,"#FFFFFF"))
+        self.coords.append((400,75,435,110,"#FFFFFF"))
         self.coords.append((450,75,485,110,"#819FF7"))
         for i in range(0,4,1):
             self.coords.append((450,160+((i)*50),485,125+((i)*50),"white"))
         for i in range(0,4,1):
             self.coords.append((500+((i)*50),310,535+((i)*50),275,"white"))
         self.coords.append((650,360,685,325,"white"))
-        self.coords.append((650,410,685,375,"#F3F781"))
+        self.coords.append((650,410,685,375,"#F2F5A9"))
         for i in range(1,4,1):
             self.coords.append((650-((i)*50),410,685-((i)*50),375,"white"))
         for i in range(0,4,1):
@@ -111,13 +178,13 @@ class canvas(Frame):
             self.coords.append((350,310-(i*50),385,275-(i*50),"white"))
             
         for i in range(0,4,1):
-            self.coords.append((400,410+((i)*50),435,375+((i)*50),"#F78181"))
+            self.coords.append((400,560-((i)*50),435,525-((i)*50),"#F78181"))
         for i in range(0,4,1):
             self.coords.append((400,160+((i)*50),435,125+((i)*50),"#819FF7"))
         for i in range(0,4,1):
             self.coords.append((200+((i)*50),360,235+((i)*50),325,"#81F781"))
         for i in range(0,4,1):
-            self.coords.append((450+((i)*50),360,485+((i)*50),325,"#F3F781"))
+            self.coords.append((600-((i)*50),360,635-((i)*50),325,"#F2F5A9"))
         
         for i in range (1,57,1):
             myTag = "{}".format(i)
@@ -144,10 +211,20 @@ class canvas(Frame):
         self.main_board.create_oval(150,560,185,525,fill="#F78181")
         self.main_board.create_oval(200,560,235,525,fill="#F78181")
         
-        self.main_board.create_oval(650,610,685,575,fill="#F3F781")
-        self.main_board.create_oval(650,560,685,525,fill="#F3F781")
-        self.main_board.create_oval(600,610,635,575,fill="#F3F781")
-        self.main_board.create_oval(600,560,635,525,fill="#F3F781")
+        self.main_board.create_oval(650,610,685,575,fill="#F2F5A9")
+        self.main_board.create_oval(650,560,685,525,fill="#F2F5A9")
+        self.main_board.create_oval(600,610,635,575,fill="#F2F5A9")
+        self.main_board.create_oval(600,560,635,525,fill="#F2F5A9")
+        
+    def send(self):
+        global recevie_disable
+        recevie_disable = True
+        print("sent")
+        
+    def receive(self):
+        global send_disable
+        send_disable = True
+        print("received")
             
 class Dice:
     def __init__(self, master):
@@ -205,7 +282,13 @@ class Dice:
         self.diceButton = Button(self.frame, text = 'würfeln', width = 5)
         self.diceButton.pack(side = "bottom")
         self.diceButton.bind("<Button-1>", roll_dice)
-        
+
+HOST = "127.0.0.1"
+PORT = 61111
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((HOST, PORT))
+
 root_window = Tk()
 app = canvas(root_window)
 app.mainloop()
