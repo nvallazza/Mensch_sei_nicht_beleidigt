@@ -14,29 +14,31 @@ dice_force = True
 global count
 count = True
 global your_turn
-your_turn = True
-global recevie_disable
-recevie_disable = False
-global send_disable
-send_disable = False
+your_turn = False
 
 class canvas(Frame):
     def __init__(self, master=None):
         global count, your_turn
         super().__init__(master)
-        self.coords = []
+        self.round = 0
+        self.coords = [(350, 75, 385, 110, '#FFFFFF'), (400, 75, 435, 110, '#FFFFFF'), (450, 75, 485, 110, '#819FF7'), (450, 160, 485, 125, 'white'), (450, 210, 485, 175, 'white'), (450, 260, 485, 225, 'white'), [450, 310, 485, 275, 'white'], (500, 310, 535, 275, 'white'), (550, 310, 585, 275, 'white'), (600, 310, 635, 275, 'white'), (650, 310, 685, 275, 'white'), (650, 360, 685, 325, 'white'), (650, 410, 685, 375, '#F2F5A9'), (600, 410, 635, 375, 'white'), (550, 410, 585, 375, 'white'), (500, 410, 535, 375, 'white'), (450, 410, 485, 375, 'white'), (450, 460, 485, 425, 'white'), (450, 510, 485, 475, 'white'), (450, 560, 485, 525, 'white'), (450, 610, 485, 575, 'white'), (400, 610, 435, 575, 'white'), (350, 610, 385, 575, '#F78181'), [350, 560, 385, 525, 'white'], (350, 510, 385, 475, 'white'), (350, 460, 385, 425, 'white'), (350, 410, 385, 375, 'white'), (300, 410, 335, 375, 'white'), (250, 410, 285, 375, 'white'), (200, 410, 235, 375, 'white'), (150, 410, 185, 375, 'white'), (150, 360, 185, 325, 'white'), (150, 310, 185, 275, '#81F781'), (200, 310, 235, 275, 'white'), (250, 310, 285, 275, 'white'), (300, 310, 335, 275, 'white'), (350, 310, 385, 275, 'white'), (350, 260, 385, 225, 'white'), (350, 210, 385, 175, 'white'), (350, 160, 385, 125, 'white'), (400, 560, 435, 525, '#F78181'), (400, 510, 435, 475, '#F78181'), (400, 460, 435, 425, '#F78181'), (400, 410, 435, 375, '#F78181'), (400, 160, 435, 125, '#819FF7'), (400, 210, 435, 175, '#819FF7'), (400, 260, 435, 225, '#819FF7'), (400, 310, 435, 275, '#819FF7'), (200, 360, 235, 325, '#81F781'), (250, 360, 285, 325, '#81F781'), (300, 360, 335, 325, '#81F781'), (350, 360, 385, 325, '#81F781'), (600, 360, 635, 325, '#F2F5A9'), (550, 360, 585, 325, '#F2F5A9'), (500, 360, 535, 325, '#F2F5A9'), (450, 360, 485, 325, '#F2F5A9'), (350, 75, 385, 110, '#FFFFFF'), (400, 75, 435, 110, '#FFFFFF'), (450, 75, 485, 110, '#819FF7'), (450, 160, 485, 125, 'white'), (450, 210, 485, 175, 'white'), (450, 260, 485, 225, 'white'), (450, 310, 485, 275, 'white'), (500, 310, 535, 275, 'white'), (550, 310, 585, 275, 'white'), (600, 310, 635, 275, 'white'), (650, 310, 685, 275, 'white'), (650, 360, 685, 325, 'white'), (650, 410, 685, 375, '#F2F5A9'), (600, 410, 635, 375, 'white'), (550, 410, 585, 375, 'white'), (500, 410, 535, 375, 'white'), (450, 410, 485, 375, 'white'), (450, 460, 485, 425, 'white'), (450, 510, 485, 475, 'white'), (450, 560, 485, 525, 'white'), (450, 610, 485, 575, 'white'), (400, 610, 435, 575, 'white'), (350, 610, 385, 575, '#F78181'), (350, 560, 385, 525, 'white'), (350, 510, 385, 475, 'white'), (350, 460, 385, 425, 'white'), (350, 410, 385, 375, 'white'), (300, 410, 335, 375, 'white'), (250, 410, 285, 375, 'white'), (200, 410, 235, 375, 'white'), (150, 410, 185, 375, 'white'), (150, 360, 185, 325, 'white'), (150, 310, 185, 275, '#81F781'), (200, 310, 235, 275, 'white'), (250, 310, 285, 275, 'white'), (300, 310, 335, 275, 'white'), (350, 310, 385, 275, 'white'), (350, 260, 385, 225, 'white'), (350, 210, 385, 175, 'white'), (350, 160, 385, 125, 'white'), (400, 560, 435, 525, '#F78181'), (400, 510, 435, 475, '#F78181'), (400, 460, 435, 425, '#F78181'), (400, 410, 435, 375, '#F78181'), (400, 160, 435, 125, '#819FF7'), (400, 210, 435, 175, '#819FF7'), (400, 260, 435, 225, '#819FF7'), (400, 310, 435, 275, '#819FF7'), (200, 360, 235, 325, '#81F781'), (250, 360, 285, 325, '#81F781'), (300, 360, 335, 325, '#81F781'), (350, 360, 385, 325, '#81F781'), (600, 360, 635, 325, '#F2F5A9'), (550, 360, 585, 325, '#F2F5A9'), (500, 360, 535, 325, '#F2F5A9'), (450, 360, 485, 325, '#F2F5A9')]
         self.master = master
+        self.main_board = Canvas(self,width=800, height=700, bg = "#F5F6CE")
+        self.main_board.pack()
+        print("receive...")
         self.receive()
         self.newWindow = Toplevel(self.master)
         self.newWindow.after(1, lambda: self.newWindow.focus_force())
+        print("Dice...")
         Dice(self.newWindow)
         master.title("Mensch ärgere dich nicht!")
         self.pack()
-        self.create_board()
+        print("Board...")
+        self.color = ""
     
     def new_window(self, event):
-        global dice_allowed, dice_force, count, your_turn, send_disable, recevie_disable
-        
+        global dice_allowed, dice_force, count, your_turn
+        print("hi")
         if your_turn == False:
             self.receive()
             return
@@ -60,6 +62,7 @@ class canvas(Frame):
     
     def clicked(self):
         global num,dice_allowed
+        self.round +=1
         for j in range (0,5,1):
             for i in range (j+1,7,1):
                 if ( self.caller == (40-j) and num == i):
@@ -87,7 +90,7 @@ class canvas(Frame):
             for i in range (1+j,7,1):
                 if ((self.caller == 32-j) and (y[4] == "green") and (num >= j and num <= 4+j)):
                     y=list(self.coords[47+(num-j)])
-                    y[4]="#F3F781"
+                    y[4]="#81F781"
                     self.coords[47+(num-j)]=y
                     self.main_board.itemconfigure(48+(num-j),fill="green")
                     print("you clicked:"+str(self.caller))
@@ -98,7 +101,7 @@ class canvas(Frame):
             for i in range (1+j,7,1):
                 if ((self.caller == 12-j) and (y[4] == "yellow") and (num >= j and num <= 4+j)):
                     y=list(self.coords[51+(num-j)])
-                    y[4]="#F3F781"
+                    y[4]="#F2F5A9"
                     self.coords[51+(num-j)]=y
                     self.main_board.itemconfigure(52+(num-j),fill="yellow")
                     print("you clicked:"+str(self.caller))
@@ -109,7 +112,7 @@ class canvas(Frame):
             for i in range (1+j,7,1):
                 if ((self.caller == 2-j) and (y[4] == "blue") and (num >= j and num <= 4+j)):
                     y=list(self.coords[43+(num-j)])
-                    y[4]="#F3F781"
+                    y[4]="#819FF7"
                     self.coords[43+(num-j)]=y
                     self.main_board.itemconfigure(44+(num-j),fill="blue")
                     print("you clicked:"+str(self.caller))
@@ -117,8 +120,19 @@ class canvas(Frame):
                     self.main_board.itemconfigure(self.caller, fill = "white")
                     return
             
+        if self.round == 1:
+            y=list(self.coords[self.caller-1])
+            if y[4] == "#F78181":
+                self.color = "red"
+            elif y[4] == "#819FF7":
+                self.color = "blue"
+            elif y[4] == "#F2F5A9":
+                self.color = "yellow"
+            else:
+                self.color = "green"
+                
         y=list(self.coords[self.caller+num-1])
-        y[4]="blue"
+        y[4] = self.color
         self.coords[self.caller+num-1]=y
         y=list(self.coords[self.caller-1])
         if y[0] == 450 and y[1] == 75:
@@ -130,59 +144,23 @@ class canvas(Frame):
         elif y[0] == 150 and y[1] == 310:
             self.main_board.itemconfigure(self.caller, fill = "#81F781")
         else:
+            y[4]= "white"
             self.main_board.itemconfigure(self.caller, fill = "white")
-            
-        self.main_board.itemconfigure(self.caller+num,fill="blue")
+        
+        self.coords[self.caller-1]=y
+        self.main_board.itemconfigure(self.caller+num,fill=self.color)
         print("you clicked:"+str(self.caller))
         self.send()
         dice_allowed = True
 
     def create_board(self):
-        global num
         x0 = 0
         x1 = 0
         y0 = 0
         y1 = 0
         color = ""
-        self.main_board = Canvas(self,width=800, height=700, bg = "#F5F6CE")
-        self.main_board.pack()
         
-        self.coords.append((350,75,385,110,"#FFFFFF"))
-        self.coords.append((400,75,435,110,"#FFFFFF"))
-        self.coords.append((450,75,485,110,"#819FF7"))
-        for i in range(0,4,1):
-            self.coords.append((450,160+((i)*50),485,125+((i)*50),"white"))
-        for i in range(0,4,1):
-            self.coords.append((500+((i)*50),310,535+((i)*50),275,"white"))
-        self.coords.append((650,360,685,325,"white"))
-        self.coords.append((650,410,685,375,"#F2F5A9"))
-        for i in range(1,4,1):
-            self.coords.append((650-((i)*50),410,685-((i)*50),375,"white"))
-        for i in range(0,4,1):
-            self.coords.append((450,410+((i)*50),485,375+((i)*50),"white"))
-        for i in range(0,2,1):
-            self.coords.append((450-(50*i),610,485-(50*i),575,"white"))
-        self.coords.append((350,610,385,575,"#F78181"))
-        for i in range(0,4,1):
-            self.coords.append((350,560-(i*50),385,525-(i*50),"white"))
-        for i in range(0,4,1):
-            self.coords.append((300-((i)*50),410,335-((i)*50),375,"white"))
-        self.coords.append((150,360,185,325,"white"))
-        self.coords.append((150,310,185,275,"#81F781"))
-        for i in range(1,4,1):
-            self.coords.append((150+((i)*50),310,185+((i)*50),275,"white"))
-        for i in range(0,4,1):
-            self.coords.append((350,310-(i*50),385,275-(i*50),"white"))
-            
-        for i in range(0,4,1):
-            self.coords.append((400,560-((i)*50),435,525-((i)*50),"#F78181"))
-        for i in range(0,4,1):
-            self.coords.append((400,160+((i)*50),435,125+((i)*50),"#819FF7"))
-        for i in range(0,4,1):
-            self.coords.append((200+((i)*50),360,235+((i)*50),325,"#81F781"))
-        for i in range(0,4,1):
-            self.coords.append((600-((i)*50),360,635-((i)*50),325,"#F2F5A9"))
-        
+        print("hihi")
         for i in range (1,57,1):
             myTag = "{}".format(i)
             x0 = self.coords[i-1][0]
@@ -192,63 +170,39 @@ class canvas(Frame):
             color = self.coords[i-1][4]
             field= self.main_board.create_oval(x0,y0,x1,y1,fill=color,tags=myTag)
             self.main_board.tag_bind(myTag, "<Button-1>", self.new_window)
-            
-        self.main_board.create_oval(650,75,685,110,fill="#819FF7")
-        self.main_board.create_oval(600,75,635,110,fill="#819FF7")
-        self.main_board.create_oval(650,125,685,160,fill="#819FF7")
-        self.main_board.create_oval(600,125,635,160,fill="#819FF7")
-        
-        self.main_board.create_oval(150,75,185,110,fill="#81F781")
-        self.main_board.create_oval(200,75,235,110,fill="#81F781")
-        self.main_board.create_oval(150,125,185,160,fill="#81F781")
-        self.main_board.create_oval(200,125,235,160,fill="#81F781")
-        
-        self.main_board.create_oval(150,610,185,575,fill="#F78181")
-        self.main_board.create_oval(200,610,235,575,fill="#F78181")
-        self.main_board.create_oval(150,560,185,525,fill="#F78181")
-        self.main_board.create_oval(200,560,235,525,fill="#F78181")
-        
-        self.main_board.create_oval(650,610,685,575,fill="#F2F5A9")
-        self.main_board.create_oval(650,560,685,525,fill="#F2F5A9")
-        self.main_board.create_oval(600,610,635,575,fill="#F2F5A9")
-        self.main_board.create_oval(600,560,635,525,fill="#F2F5A9")
-        
+
     def send(self):
-        global your_turn, recevie_disable
-        #recevie_disable = True
+        global your_turn
         your_turn = False
         s.sendall(pickle.dumps(self.coords))
         print("sent")
-        received = s.recv(1024)
-        received_readable = pickle.loads(received)
-        self.coords = received_readable
-        print("received=", received_readable)
-        received = s.recv(1024)
-        received_readable = pickle.loads(received)
-        self.coords = received_readable
-        print("received", received_readable)
-        your_turn=True
-        print(received_readable)
+        self.receive()
         
     def receive(self):
-        global your_turn, send_disable
-        #send_disable = True
-        received = s.recv(1024)
+        global your_turn
+        received = s.recv(4096)
         received_readable = pickle.loads(received)
-        
         print(received_readable)
         
         if type(received_readable) == str:
             if received_readable == "TURN":
                 print("SUBBA")
                 your_turn = True
+                self.create_board()
+            elif received_readable == "NEW":
+                self.receive()
             else:
                 your_turn = False
         else:
             your_turn = True
             self.coords = received_readable
             print("received")
-            print(received_readable)
+            print(self.coords)
+            self.main_board.destroy()
+            self.main_board = Canvas(self,width=800, height=700, bg = "#F5F6CE")
+            self.main_board.pack()
+            self.create_board()
+            return
             
 class Dice:
     def __init__(self, master):
@@ -270,29 +224,35 @@ class Dice:
                 if num == 0:
                     for i in range (0,3,1):
                         self.dice.delete("all")
-                        self.num = random.randint(1,6)
+                        #self.num = random.randint(1,6)
+                        self.num = 6
                         print(self.num)
                         print(i)
                         if self.num==1:
                             oval = self.dice.create_oval(70,70,85,85, fill="black")
+                            dice_force = True
                         elif self.num==2:
                             oval = self.dice.create_oval(105,35,120,50, fill="black")
                             oval = self.dice.create_oval(50,105,35,120, fill="black")
+                            dice_force = True
                         elif self.num==3:
                             oval = self.dice.create_oval(105,35,120,50, fill="black")
                             oval = self.dice.create_oval(50,105,35,120, fill="black")
                             oval = self.dice.create_oval(70,70,85,85, fill="black")
+                            dice_force = True
                         elif self.num==4:
                             oval = self.dice.create_oval(105,35,120,50, fill="black")
                             oval = self.dice.create_oval(50,105,35,120, fill="black")
                             oval = self.dice.create_oval(105,105,120,120, fill="black")
                             oval = self.dice.create_oval(50,35,35,50, fill="black")
+                            dice_force = True
                         elif self.num==5:
                             oval = self.dice.create_oval(105,35,120,50, fill="black")
                             oval = self.dice.create_oval(50,105,35,120, fill="black")
                             oval = self.dice.create_oval(105,105,120,120, fill="black")
                             oval = self.dice.create_oval(50,35,35,50, fill="black")
                             oval = self.dice.create_oval(70,70,85,85, fill="black")
+                            dice_force = True
                         else:
                             oval = self.dice.create_oval(105,25,120,40, fill="black")
                             oval = self.dice.create_oval(50,115,35,130, fill="black")
@@ -348,7 +308,7 @@ class Dice:
                     dice_force = False
                     print(num)
                     dice_allowed = False
-        
+
         self.diceButton = Button(self.frame, text = 'würfeln', width = 5)
         self.diceButton.pack(side = "bottom")
         self.diceButton.bind("<Button-1>", roll_dice)
